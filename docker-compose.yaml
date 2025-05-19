@@ -1,0 +1,24 @@
+services:
+  database:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: password-root
+    volumes:
+      - database-volume:/var/lib/mysql/data/
+    ports:
+      - "3306:3306"
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - "3307:80"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=database
+      - PMA_PORT=3306
+volumes:
+  database-volume:
+  phpadmin-volume:

@@ -10,9 +10,6 @@ use Illuminate\Http\JsonResponse;
 
 class DriverController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): JsonResponse
     {
         $data = $request->all();
@@ -38,9 +35,6 @@ class DriverController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id): JsonResponse
     {
         $driver = Driver::findOrFail($id);

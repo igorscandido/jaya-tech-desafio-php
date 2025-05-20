@@ -9,9 +9,6 @@ use Illuminate\Http\JsonResponse;
 
 class RideController extends Controller
 {
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $ride = Ride::with('driver')->findOrFail($id);
@@ -32,9 +29,6 @@ class RideController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $ride = Ride::findOrFail($id);

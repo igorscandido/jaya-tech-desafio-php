@@ -16,10 +16,6 @@ use App\Http\Controllers\RideController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::post('/drivers', [DriverController::class, 'store']);
 Route::delete('/drivers/{id}', [DriverController::class, 'destroy']);
 Route::get('/drivers/{id}/get-rides', [DriverController::class, 'getOpenRides']);

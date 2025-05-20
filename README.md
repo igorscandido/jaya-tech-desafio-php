@@ -1,66 +1,242 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Jaya Tech PHP Challenge
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a REST API project for a driver ride system, developed in PHP using Laravel 10.x.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.1 or higher
+- Composer (for Database only)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd jaya-tech-desafio-php
+```
 
-## Learning Laravel
+2. Install PHP dependencies:
+```bash
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. Set up the environment:
+```bash
+cp .env.example .env
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+4. Configure environment variables in `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ridely
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+5. Generate application key:
+```bash
+php artisan key:generate
+```
 
-## Laravel Sponsors
+6. Run migrations:
+```bash
+php artisan migrate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+7. Start the database and phpmyadmin on Docker Compose (optional):
+```bash
+docker compose up -d
+```
 
-### Premium Partners
+8. Start the server:
+```bash
+php artisan serve
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## API Endpoints
 
-## Contributing
+### Drivers
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Register a new driver
+```http
+POST /api/drivers
+Content-Type: application/json
 
-## Code of Conduct
+{
+    "name": "John Doe",
+    "car": {
+        "license_plate": "ABC1234",
+        "model": "Toyota Corolla",
+        "color": "Black"
+    },
+    "available": true
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Delete a driver
+```http
+DELETE /api/drivers/{id}
+```
 
-## Security Vulnerabilities
+#### Get allocated rides for a driver
+```http
+GET /api/drivers/{id}/get-rides
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Rides
 
-## License
+#### Request a driver
+```http
+POST /api/rides/request-driver
+Content-Type: application/json
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+{
+    "passenger": {
+        "name": "Jane Doe",
+        "email": "jane@example.com"
+    },
+    "pick_up": "123 Main St",
+    "drop_off": "456 Oak Ave"
+}
+```
+
+Response:
+```json
+{
+    "id": 1,
+    "status": "REQUESTED",
+    "drop_off": "456 Oak Ave",
+    "pick_up": "123 Main St",
+    "driver": {
+        "name": "John Doe",
+        "car": {
+            "color": "Black",
+            "license_plate": "ABC1234",
+            "model": "Toyota Corolla"
+        }
+    }
+}
+```
+
+#### Cancel a ride
+```http
+POST /api/rides/cancel-ride
+Content-Type: application/json
+
+{
+    "id": 1
+}
+```
+
+Response:
+```json
+{
+    "id": 1,
+    "status": "CANCELLED",
+    "drop_off": "456 Oak Ave",
+    "pick_up": "123 Main St"
+}
+```
+
+#### Accept a ride
+```http
+POST /api/rides/accept-ride
+Content-Type: application/json
+
+{
+    "id": 1
+}
+```
+
+Response:
+```json
+{
+    "id": 1,
+    "status": "ACCEPTED",
+    "drop_off": "456 Oak Ave",
+    "pick_up": "123 Main St",
+    "passenger": {
+        "name": "Jane Doe",
+        "email": "jane@example.com"
+    }
+}
+```
+
+#### Refuse a ride
+```http
+POST /api/rides/refuse-ride
+Content-Type: application/json
+
+{
+    "id": 1
+}
+```
+
+Response:
+```json
+{
+    "id": 1,
+    "status": "REFUSED",
+    "drop_off": "456 Oak Ave",
+    "pick_up": "123 Main St",
+    "passenger": {
+        "name": "Jane Doe",
+        "email": "jane@example.com"
+    }
+}
+```
+
+#### Finish a ride
+```http
+POST /api/rides/finish-ride
+Content-Type: application/json
+
+{
+    "id": 1,
+    "price": 25.50
+}
+```
+
+Response:
+```json
+{
+    "id": 1,
+    "status": "FINISHED",
+    "drop_off": "456 Oak Ave",
+    "price": 25.50,
+    "passenger": {
+        "name": "Jane Doe",
+        "email": "jane@example.com"
+    }
+}
+```
+
+## Ride States
+
+A ride can be in one of the following states:
+- `REQUESTED`: Ride requested, waiting for acceptance
+- `ACCEPTED`: Ride accepted by driver
+- `FINISHED`: Ride completed
+- `CANCELLED`: Ride cancelled
+- `REFUSED`: Ride refused
+
+## Ride Flow
+
+1. Passenger requests a ride (`POST /api/rides/request-driver`)
+2. System automatically assigns an available driver
+3. Driver can:
+   - Accept the ride (`POST /api/rides/accept-ride`)
+   - Refuse the ride (`POST /api/rides/refuse-ride`)
+4. If accepted, the ride starts
+5. Driver can:
+   - Finish the ride (`POST /api/rides/finish-ride`)
+   - Cancel the ride (`POST /api/rides/cancel-ride`)
+
+## Error Handling
+
+The API returns the following HTTP status codes:
+- `200`: Success
+- `404`: Resource not found
+- `500`: Internal server error

@@ -5,7 +5,8 @@ This is a REST API project for a driver ride system, developed in PHP using Lara
 ## Requirements
 
 - PHP 8.1 or higher
-- Composer (for Database only)
+- Composer
+- Docker (for database only)
 
 ## Installation
 

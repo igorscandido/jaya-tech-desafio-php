@@ -1,6 +1,7 @@
 # Jaya Tech PHP Challenge
 
 This is a REST API project for a driver ride system, developed in PHP using Laravel 10.x.
+For the technical challenge details and what you need to do look into: CHALLENGE.md
 
 ## Requirements
 
